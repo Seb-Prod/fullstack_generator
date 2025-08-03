@@ -1,0 +1,2 @@
+chmod +x scripts/*.sh scripts/parts/*.sh
+./scripts/main.sh

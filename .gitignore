@@ -1,0 +1,106 @@
+# ==============================================
+# .gitignore pour projet de scripts shell
+# ==============================================
+
+# Fichiers temporaires et logs
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.swp
+*.swo
+*~
+
+# Fichiers de sortie des scripts
+output/
+dist/
+build/
+generated/
+temp/
+tmp/
+
+# Projets générés par les scripts
+test-project/
+mon-projet-fullstack/
+sample-*/
+demo-*/
+*-generated/
+
+# Variables d'environnement et configuration
+.env
+.env.local
+.env.*.local
+config.local.sh
+secrets.sh
+
+# Fichiers de debugging
+debug.log
+error.log
+trace.log
+*.debug
+
+# Fichiers système
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Éditeurs et IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vim/
+.nvim/
+.emacs.d/
+
+# Archives et compressions
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# Fichiers de processus
+*.pid
+*.seed
+*.pid.lock
+
+# Cache et données temporaires
+cache/
+.cache/
+node_modules/  # Si vos scripts interagissent avec Node.js
+.npm/
+
+# Données sensibles
+passwords.txt
+keys.txt
+credentials.sh
+tokens.sh
+
+# Fichiers de test locaux
+test_output/
+test_results/
+local_test_*
+
+# Documentation générée
+docs/_build/
+*.pdf  # Si généré automatiquement
+
+# Fichiers de backup des éditeurs
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# Spécifique à votre projet
+# Ajoutez ici vos exclusions personnalisées
