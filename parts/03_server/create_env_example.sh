@@ -11,9 +11,11 @@ echo -e "${GREEN} - Création du .env.example ${NC}"
 # Le fichier
 cat > "$SERVER_DIR/.env.example" << 'EOF'
 # Configuration du serveur
-PORT=5000
+PORT=8000
 NODE_ENV=development
 CLIENT_URL=http://localhost:3000
+
+DATABASE_URL="mysql://root:@localhost:3306/mon_projet"
 
 # Configuration de la base de données MySQL
 DB_HOST=localhost

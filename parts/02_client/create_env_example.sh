@@ -9,5 +9,5 @@ echo -e "${GREEN} - Création du .env.example ${NC}"
 
 # Le fichier
 cat > "$CLIENT_DIR/.env.example" << 'EOF'
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:8000/api
 EOF

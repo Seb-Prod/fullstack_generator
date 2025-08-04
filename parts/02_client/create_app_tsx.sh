@@ -10,7 +10,7 @@ echo -e "${GREEN} - Création du src/App.tsx ${NC}"
 
 # Le fichier
 cat > "$CLIENT_DIR/src/App.tsx" << 'EOF'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './App.module.css'
 import { apiService } from './services/apiService'
 

@@ -19,3 +19,16 @@ bash "$SCRIPT_DIR/03_server/create_app_ts.sh" "$PROJECT_NAME"
 bash "$SCRIPT_DIR/03_server/create_index_ts.sh" "$PROJECT_NAME"
 bash "$SCRIPT_DIR/03_server/create_pingController_ts.sh" "$PROJECT_NAME"
 bash "$SCRIPT_DIR/03_server/create_database_ts.sh" "$PROJECT_NAME"
+
+mkdir -p "$PROJECT_NAME/server/prisma"
+
+cat > "$PROJECT_NAME/server/prisma/schema.prisma" << 'EOF'
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+EOF
