@@ -13,7 +13,7 @@ prompt_input() {
 
     while true; do
         print_plain "$BLACK" "${prompt} (par défaut: $default) :"
-        print_warning "   Tapez 'q' pour quitter"
+        print_tips "   Tapez 'q' pour quitter"
 
         read -r value
         if [[ "$value" =~ ^(q|quit|exit)$ ]]; then
@@ -42,7 +42,7 @@ prompt_continue() {
 
     while true; do
         print_plain "$BLACK" "${BOLD}${prompt}"
-        print_warning "   (Y/n) "
+        print_tips "   (Y/n) "
         read -r answer
 
         answer=${answer:-y}  # par défaut : oui

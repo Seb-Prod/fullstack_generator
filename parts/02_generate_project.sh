@@ -1,43 +1,61 @@
 #!/bin/bash
-
 # =============================================================================
 # Fichier: parts/02_generate_project.sh
+# 
+# Description:
+#   Ce script est une étape du générateur de projet fullstack. Il est
+#   responsable de la création de la structure de répertoires, de
+#   l'initialisation de Git et de la création des fichiers de configuration
+#   de base pour un nouveau projet.
+# 
+# Utilisation:
+#   Ce script n'est pas destiné à être exécuté seul. Il est appelé par le
+#   script principal 'generate-fullstack-project.sh'.
+# 
+# Arguments (passés par le script principal):
+#   $1 - Nom du projet
+#   $2 - Répertoire de travail de l'utilisateur
+#   $3 - Port du serveur frontend
+#   $4 - Port du serveur backend
 # =============================================================================
 
+# =============================================================================
+# --- Configuration et dépendances ---
+# =============================================================================
 
-# ==========================
-# --- Configuration ---
-# ==========================
+# Définir le répertoire parent du script
+# Ne pas utiliser `dirname` car il ne gère pas les chemins relatifs de manière fiable
+PARENT_DIR="$(cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" && pwd)"
 
-# Définir PARENT_DIR seulement s'il n'existe pas déjà
-if [[ -z "${PARENT_DIR:-}" ]]; then
-    PARENT_DIR="$(cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" && pwd)"
-fi
+# Import des utilitaires partagés
+source "$PARENT_DIR/utils/bootstrap.sh"
 
-# Import des utilitaires
-source "$(dirname "${BASH_SOURCE[0]}")/../utils/bootstrap.sh"
-
-# Récupération des paramètres
+# Récupération et définition des paramètres en lecture seule
 readonly PROJECT_NAME="$1"
 readonly USER_CWD="$2"
 readonly FRONTEND_PORT="$3"
 readonly BACKEND_PORT="$4"
 
 # =============================================================================
-# FONCTIONS UTILITAIRES
+# --- Fonctions utilitaires ---
 # =============================================================================
 
+# validate_parameters()
+# Vérifie que les paramètres nécessaires ont été fournis et sont non-vides.
+# Affiche un message d'erreur et quitte si un paramètre est manquant.
 validate_parameters() {
-    clear_lines 1
+    clear_lines 1 # Efface la ligne de l'appel de fonction
     local errors=()
 
+    # Vérification de l'existence de chaque paramètre
     [[ -z "$PROJECT_NAME" ]] && errors+=("Nom du projet manquant")
     [[ -z "$USER_CWD" ]] && errors+=("Répertoire utilisateur manquant")
     [[ -z "$FRONTEND_PORT" ]] && errors+=("Port frontend manquant")
     [[ -z "$BACKEND_PORT" ]] && errors+=("Port backend manquant")
 
+    # Si des erreurs ont été trouvées, les afficher et quitter
     if [[ ${#errors[@]} -gt 0 ]]; then
-        print_error "Erreurs de paramètres :"
+        print_error "❌ Erreurs de paramètres :"
         for err in "${errors[@]}"; do
             echo "   • $err" >&2
         done
@@ -46,6 +64,8 @@ validate_parameters() {
     fi
 }
 
+# create_project_structure()
+# Crée l'arborescence des dossiers pour les parties frontend et backend du projet.
 create_project_structure() {
     print_step_header "📁 Création de la structure du projet"
 
@@ -67,10 +87,11 @@ create_project_structure() {
         "$PROJECT_NAME/server/prisma"
     )
 
+    # Boucle pour créer chaque répertoire
     for dir in "${directories[@]}"; do
         print_plain "$BLACK" "$dir"
         mkdir -p "$dir"
-        sleep 0.1
+        sleep 0.05 # Pause pour un meilleur effet visuel
         if [ $? -eq 0 ]; then
             clear_lines 1
         else
@@ -78,71 +99,85 @@ create_project_structure() {
         fi
     done
 
-    clear_lines 1
-    print_success "Structure du projet créée"
+    clear_lines 1 # Nettoyer la dernière ligne vide
+    print_success "✅ Structure du projet créée"
 }
 
+# setup_git_repository()
+# Initialise un dépôt Git dans le nouveau répertoire du projet.
 setup_git_repository() {
     print_step_header "🔧 Initialisation de Git"
-    sleep 0.1
+    #sleep 0.1
 
+    # Accéder au répertoire du projet
     cd "$PROJECT_NAME" || {
-        print_error "Impossible d'accéder au répertoire du projet"
+        print_error "❌ Impossible d'accéder au répertoire du projet"
         exit 1
     }
 
+    # Initialiser Git en mode silencieux
     if ! git init --quiet &>/dev/null; then
-        print_warning "Avertissement: Impossible d'initialiser Git"
+        print_warning "⚠️  Avertissement: Impossible d'initialiser Git"
     fi
 
-    sleep 0.1
-    clear_lines 2
-    print_success "Git initialisé"
+    #sleep 0.1
+    clear_lines 2 # Nettoyer les lignes de la commande et du message
+    print_success "✅ Git initialisé"
 }
 
+# set_permissions()
+# Modifie les permissions du projet si le script est exécuté avec `sudo`.
 set_permissions() {
     if [[ -n "${SUDO_USER:-}" ]]; then
         print_title "🔑 Configuration des permissions"
         chown -R "$SUDO_USER" .
         chmod -R u+w .
         clear_lines 1
-        print_success "Permissions configurées"
+        print_success "✅ Permissions configurées"
     fi
 }
 
+# create_template_files()
+# Appelle un script externe pour générer les fichiers de configuration à partir de templates.
 create_template_files() {
-    # Exporter les variables pour les templates
+    # Exporter les variables pour qu'elles soient disponibles dans le sous-script
     export PROJECT_NAME FRONTEND_PORT BACKEND_PORT
 
     local create_files_script="$(dirname "$0")/create_project_files.sh"
 
     if [[ -f "$create_files_script" ]]; then
         if ! bash "$create_files_script" "$PROJECT_NAME" "$FRONTEND_PORT" "$BACKEND_PORT"; then
-            print_error "Erreur lors de la création des fichiers templates"
+            print_error "❌ Erreur lors de la création des fichiers templates"
             exit 1
         fi
     else
-        print_warning "Script de création des fichiers non trouvé: $create_files_script"
+        print_warning "⚠️  Script de création des fichiers non trouvé: $create_files_script"
     fi
 }
 
 # =============================================================================
-# FONCTION PRINCIPALE
+# --- Fonction principale du script ---
 # =============================================================================
 
+# main()
+# Orchestre l'exécution des fonctions pour créer la structure du projet.
 main() {
+    # Validation des paramètres avant de commencer
     validate_parameters
 
+    # Se positionner dans le répertoire de travail de l'utilisateur
     cd "$USER_CWD" || {
-        print_error "Impossible d'accéder au répertoire: $USER_CWD"
+        print_error "❌ Impossible d'accéder au répertoire: $USER_CWD"
         exit 1
     }
 
+    # Vérifier si le répertoire du projet existe déjà pour éviter l'écrasement
     if [[ -d "$PROJECT_NAME" ]]; then
-        print_error "Le projet '$PROJECT_NAME' existe déjà"
+        print_error "❌ Le projet '$PROJECT_NAME' existe déjà."
         exit 1
     fi
 
+    # Exécution séquentielle des étapes
     create_project_structure
     setup_git_repository
     set_permissions
@@ -152,7 +187,8 @@ main() {
 }
 
 # =============================================================================
-# EXÉCUTION
+# --- Point d'entrée du script ---
 # =============================================================================
 
+# Exécute la fonction principale avec les arguments passés au script
 main "$@"

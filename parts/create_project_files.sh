@@ -50,14 +50,14 @@ create_simple_files() {
         fi
 
         print_plain "$BLACK" "Creating: $dest_path"
-        sleep 0.1
+        sleep 0.05
         if create_from_template "$source_path" "$dest_path"; then
             clear_lines 1
         else
             print_error "Creating FAILED $source_path"
             exit 1
         fi
-        sleep 0.1
+        sleep 0.05
     done
     clear_lines 1
 }
@@ -85,7 +85,7 @@ create_processed_files() {
 
         # Print the file path and use `printf` to keep the cursor on the same line
         print_plain "$BLACK" "Creating: $dest_path"
-        sleep 0.5
+        sleep 0.05
         # Call the template engine function to process and create the file
         if process_template "$source_path" "$dest_path" "$variables"; then
             clear_lines 1
@@ -95,7 +95,7 @@ create_processed_files() {
         fi
 
         # Add a short delay for better user experience
-        sleep 0.1
+        sleep 0.05
     done
     clear_lines 1
 }
@@ -176,7 +176,7 @@ create_client_files() {
 create_server_files() {
     #print_section_header "🖥️  Création des fichiers du serveur (Backend)"
     create_simple_files "server" "serveur Node.js/Express" "${SERVER_FILES_SIMPLE[@]}"
-    create_processed_files "server" "serveur Node.js/Express" "PROJECT_NAME=$PROJECT_NAME BACKEND_PORT=$BACKEND_PORT" "${SERVER_FILES_PROCESSED[@]}"
+    create_processed_files "server" "serveur Node.js/Express" "PROJECT_NAME=$PROJECT_NAME BACKEND_PORT=$BACKEND_PORT FRONTEND_PORT=$FRONTEND_PORT" "${SERVER_FILES_PROCESSED[@]}"
     #print_success "Fichiers serveur créés !"
 }
 
