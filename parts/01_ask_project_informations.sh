@@ -79,7 +79,6 @@ collect_project_info() {
     done
 
     # === PORT FRONTEND ===
-    attempts=0
     while true; do
         prompt_input "🌐 Port pour le frontend" "3000" validate_port "Port invalide ou déjà utilisé" 3
         FRONTEND_PORT="$PROMPT_RESULT"

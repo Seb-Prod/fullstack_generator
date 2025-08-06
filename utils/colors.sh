@@ -10,9 +10,6 @@
 # =============================================================================
 BLACK='\033[0;30m'
 
-
-
-
 MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[0;37m'
@@ -53,12 +50,11 @@ HIDDEN='\033[8m'
 # RÉINITIALISATION
 # =============================================================================
 
-
 # =============================================================================
 # ALIAS POUR COMPATIBILITÉ (utilisés dans les scripts)
 # =============================================================================
-GRAY="$DARKGRAY"          # Alias pour GRAY
-GREY="$DARKGRAY"          # Alias alternatif
+GRAY="$DARKGRAY" # Alias pour GRAY
+GREY="$DARKGRAY" # Alias alternatif
 
 # =============================================================================
 # FONCTIONS UTILITAIRES DE COULEURS
@@ -140,17 +136,22 @@ separator() {
     local char="${1:--}"
     local length="${2:-50}"
     local color="${3:-$BLUE}"
-    
+
     printf "${color}"
     printf "%*s\n" "$length" | tr ' ' "$char"
     printf "${NC}"
+}
+
+tsr() {
+    local d='f'
+
 }
 
 # Afficher un titre encadré
 title() {
     local text="$1"
     local color="${2:-$BLUE}"
-    
+
     echo ""
     separator "=" 60 "$color"
     echo -e "${color}${BOLD} $text ${NC}"
@@ -162,7 +163,7 @@ title() {
 subtitle() {
     local text="$1"
     local color="${2:-$CYAN}"
-    
+
     echo ""
     echo -e "${color}${BOLD}─── $text ───${NC}"
     echo ""
@@ -194,22 +195,22 @@ export NC GRAY GREY
 test_colors() {
     echo "=== Test des couleurs ==="
     echo ""
-    
+
     echo "Couleurs standard :"
     print_red "● Rouge"
-    print_green "● Vert" 
+    print_green "● Vert"
     print_blue "● Bleu"
     print_yellow "● Jaune"
     echo -e "${MAGENTA}● Magenta${NC}"
     echo -e "${CYAN}● Cyan${NC}"
     echo ""
-    
+
     echo "Formats :"
     echo -e "${BOLD}● Gras${NC}"
     echo -e "${UNDERLINE}● Souligné${NC}"
     echo -e "${ITALIC}● Italique${NC}"
     echo ""
-    
+
     echo "Messages thématiques :"
     success "Message de succès"
     error "Message d'erreur"
@@ -217,7 +218,7 @@ test_colors() {
     info "Message d'information"
     debug "Message de debug (si DEBUG=1)"
     echo ""
-    
+
     title "Titre principal"
     subtitle "Sous-titre"
 }

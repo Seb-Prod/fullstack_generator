@@ -1,9 +1,8 @@
 #!/bin/bash
-set -e
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../colors.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../utils/bootstrap.sh"
 
 PROJECT_NAME="$1"
+PROJECT_DIR="./$PROJECT_NAME"
 
 # Fonction pour filtrer les messages npm
 filter_npm_output() {
@@ -21,13 +20,19 @@ filter_npm_output() {
     done
 }
 
-echo -e "${BLUE}📦 Installation des dépendances...${NC}"
 cd "$PROJECT_NAME"
 
-# Installation du package.json racine
-npm install --no-fund 2>&1 | filter_npm_output
+# Vérifier si Prisma a des problèmes et le régénérer si nécessaire
+set +e
+cd server
+npx prisma generate --silent > /dev/null 2>&1
+PRISMA_STATUS=$?
+set -e
 
-# Installation des dépendances client et serveur
-npm run install:all --no-fund 2>&1 | filter_npm_output
+if [ $PRISMA_STATUS -ne 0 ]; then
+    print_warning "Prisma a rencontré un problème. Tentative de régénération des engines..."
+    npx prisma generate 2>&1 | filter_npm_output
+    print_success "Prisma régénéré avec succès"
+fi
 
-echo -e "${GREEN}✅ Installation des dépendances terminée${NC}"
+cd ..

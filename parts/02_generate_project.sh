@@ -1,7 +1,9 @@
+#!/bin/bash
+
 # =============================================================================
 # Fichier: parts/02_generate_project.sh
 # =============================================================================
-#!/bin/bash
+
 
 # ==========================
 # --- Configuration ---
@@ -66,9 +68,9 @@ create_project_structure() {
     )
 
     for dir in "${directories[@]}"; do
-        print_plain $dir
+        print_plain "$BLACK" "$dir"
         mkdir -p "$dir"
-        sleep 0.5
+        sleep 0.1
         if [ $? -eq 0 ]; then
             clear_lines 1
         else
@@ -82,7 +84,7 @@ create_project_structure() {
 
 setup_git_repository() {
     print_step_header "🔧 Initialisation de Git"
-    sleep 0.5
+    sleep 0.1
 
     cd "$PROJECT_NAME" || {
         print_error "Impossible d'accéder au répertoire du projet"
@@ -93,8 +95,8 @@ setup_git_repository() {
         print_warning "Avertissement: Impossible d'initialiser Git"
     fi
 
-    sleep 0.5
-    clear_lines 1
+    sleep 0.1
+    clear_lines 2
     print_success "Git initialisé"
 }
 
@@ -109,8 +111,6 @@ set_permissions() {
 }
 
 create_template_files() {
-    print_title "📜 Création des fichiers templates..."
-
     # Exporter les variables pour les templates
     export PROJECT_NAME FRONTEND_PORT BACKEND_PORT
 

@@ -5,16 +5,17 @@
 # Seb-Prod 2025
 # =============================================================================
 
-set -euo pipefail  # Mode strict : arrêt sur erreur, variables non définies, échec de pipe
+set -euo pipefail # Mode strict : arrêt sur erreur, variables non définies, échec de pipe
 
 # =============================================================================
 # CONFIGURATION ET VALIDATION
 # =============================================================================
 
-clear  # Nettoyer le terminal
+clear # Nettoyer le terminal
 
 # Répertoire du script
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
 
 # Vérification et chargement des utilitaires
 UTILS=(
@@ -69,6 +70,14 @@ main() {
   # Étape 2 : Génération de la structure du projet
   execute_step "2" "Génération de la structure" \
     "$SCRIPT_DIR/parts/02_generate_project.sh" \
+    "$PROJECT_NAME" "$USER_CWD" "$FRONTEND_PORT" "$BACKEND_PORT"
+
+  execute_step "3" "Installation des dépendances" \
+    "$SCRIPT_DIR/parts/03_install_deps.sh" \
+    "$PROJECT_NAME" "$USER_CWD" "$FRONTEND_PORT" "$BACKEND_PORT"
+
+  execute_step "4" "Traitement de Prisma" \
+    "$SCRIPT_DIR/parts/04_handle_prisma.sh" \
     "$PROJECT_NAME" "$USER_CWD" "$FRONTEND_PORT" "$BACKEND_PORT"
 
   # Étape finale
