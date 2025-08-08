@@ -50,6 +50,7 @@ UTILS=(
   "execute_step.sh"
   "print_utils.sh"
   "prompt_utils.sh"
+  "check_dependencies.sh"
 )
 
 # Variables globales (définies par les scripts inclus)
@@ -84,6 +85,9 @@ cd "$USER_CWD"
 
 # Configuration de la gestion d'erreurs
 trap cleanup_on_error EXIT ERR
+
+# Vérification de la présence des dépendences
+check_dependencies
 
 # =============================================================================
 # FONCTION PRINCIPALE

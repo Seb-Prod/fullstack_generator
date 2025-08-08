@@ -29,6 +29,7 @@ PARENT_DIR="$(cd "$(dirname "$(dirname "${BASH_SOURCE[0]}")")" && pwd)"
 
 # Import des utilitaires partagés
 source "$PARENT_DIR/utils/bootstrap.sh"
+source "$PARENT_DIR/templates.conf"
 
 # Récupération et définition des paramètres en lecture seule
 readonly PROJECT_NAME="$1"
@@ -69,29 +70,12 @@ validate_parameters() {
 create_project_structure() {
     print_step_header "📁 Création de la structure du projet"
 
-    local directories=(
-        "$PROJECT_NAME/client/src/assets"
-        "$PROJECT_NAME/client/src/components"
-        "$PROJECT_NAME/client/src/context"
-        "$PROJECT_NAME/client/src/hooks"
-        "$PROJECT_NAME/client/src/layouts"
-        "$PROJECT_NAME/client/src/libs"
-        "$PROJECT_NAME/client/src/pages"
-        "$PROJECT_NAME/client/src/services"
-        "$PROJECT_NAME/client/src/types"
-        "$PROJECT_NAME/client/src/utils"
-        "$PROJECT_NAME/client/public"
-        "$PROJECT_NAME/server/src/routes"
-        "$PROJECT_NAME/server/src/controllers"
-        "$PROJECT_NAME/server/src/services"
-        "$PROJECT_NAME/server/prisma"
-        "$PROJECT_NAME/scripts"
-    )
+    local directories=($DIRECTORIES)
 
     # Boucle pour créer chaque répertoire
     for dir in "${directories[@]}"; do
-        print_plain "$BLACK" "$dir"
-        mkdir -p "$dir"
+        print_plain "$BLACK" "$PROJECT_NAME/$dir"
+        mkdir -p "$PROJECT_NAME/$dir"
         sleep 0.05 # Pause pour un meilleur effet visuel
         if [ $? -eq 0 ]; then
             clear_lines 1
