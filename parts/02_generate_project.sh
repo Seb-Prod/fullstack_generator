@@ -85,6 +85,7 @@ create_project_structure() {
         "$PROJECT_NAME/server/src/controllers"
         "$PROJECT_NAME/server/src/services"
         "$PROJECT_NAME/server/prisma"
+        "$PROJECT_NAME/scripts"
     )
 
     # Boucle pour créer chaque répertoire

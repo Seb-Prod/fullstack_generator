@@ -4,11 +4,12 @@
   "description": "Projet fullstack TypeScript avec React et Express",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "dev": "node start.js",
+    "dev:raw": "concurrently --names \"💻CLIENT,📡SERVER\" --prefix-colors \"cyan,magenta\" --prefix \"{name}\" --kill-others-on-fail \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
     "install:all": "npm install --prefix client && npm install --prefix server",
     "build": "npm run build --prefix client && npm run build --prefix server",
     "clean": "rm -rf client/node_modules server/node_modules client/dist server/dist",
-    "create:component":"node scripts/create-component.js"
+    "create":"node scripts/main.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

@@ -23,7 +23,7 @@ if (inputPath) {
       process.exit(1);
     }
     
-    rl.question('📁 Dossier cible (components/pages/hooks/utils ou chemin personnalisé) [componants] : ', (directory) => {
+    rl.question('📁 Dossier cible (components/pages/hooks/utils ou chemin personnalisé) [components] : ', (directory) => {
       rl.close();
       createComponent(input, directory || 'components');
     });
@@ -57,9 +57,27 @@ function createComponent(inputPath, targetDirectory = 'components') {
 import styles from './${componentName}.module.css';
 
 interface ${componentName}Props {
-  // Ajoute tes props ici
+  /** Classes CSS additionnelles */
+  className?: string;
+  /** Contenu enfant du composant */
+  children?: React.ReactNode;
+  // Ajouter d'autres props ici
 }
 
+/**
+ * Composant ${componentName} - Description du composant
+ * 
+ * @param props - Les propriétés du composant ${componentName}
+ * @param props.text - Texte affiché dans le bouton
+ * @returns JSX.Element
+ * 
+ * @example
+ * \`\`\`tsx
+ * <${componentName} className="custom-class">
+ *   Contenu du composant
+ * </${componentName}>
+ * \`\`\`
+ */
 const ${componentName}: React.FC<${componentName}Props> = () => {
   return (
     <div className={styles.container}>

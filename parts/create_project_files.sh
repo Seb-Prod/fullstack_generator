@@ -16,10 +16,8 @@ PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Import des utilitaires
 source "$(dirname "${BASH_SOURCE[0]}")/../utils/bootstrap.sh"
+source "$SCRIPT_DIR/../templates.conf"
 
-#source "$PARENT_DIR/utils/colors.sh"
-#source "$PARENT_DIR/utils/terminal_utils.sh"
-#source "$PARENT_DIR/utils/template_engine.sh"
 
 # Paramètres du projet
 readonly PROJECT_NAME="${1:-}"
@@ -35,7 +33,8 @@ create_simple_files() {
     local template_dir="$1"
     local section_name="$2"
     shift 2
-    local files=("$@")
+    local files_string="$1"
+    local files=($files_string)
 
     print_plain "$BLACK" "📁 Traitement des fichiers pour $section_name"
 
@@ -68,7 +67,8 @@ create_processed_files() {
     local section_name="$2"
     local variables="$3"
     shift 3
-    local files=("$@")
+    local files_string="$1"
+    local files=($files_string)
 
     print_plain "$BLACK" "📝 Traitement des fichiers pour $section_name avec variables"
 
@@ -101,83 +101,32 @@ create_processed_files() {
 }
 
 # ==============================================================================
-# DÉFINITION DES FICHIERS À COPIER ET À TRAITER
-# ==============================================================================
-
-# Fichiers racine à copier
-declare -ra ROOT_FILES_SIMPLE=(
-    ".gitignore"
-)
-
-# Fichiers racine à traiter avec variables
-declare -ra ROOT_FILES_PROCESSED=(
-    "package.json"
-    "README.md"
-)
-
-# Fichiers client à copier
-declare -ra CLIENT_FILES_SIMPLE=(
-    ".env.example"
-    ".gitignore"
-    "index.html"
-    "package.json"
-    "tsconfig.json"
-    "tsconfig.node.json"
-    "src/App.module.css"
-    "src/App.tsx"
-    "src/main.tsx"
-    "src/vite-env.d.ts"
-)
-
-# Fichiers client à traiter avec variables
-declare -ra CLIENT_FILES_PROCESSED=(
-    ".env"
-    "vite.config.ts"
-    "src/services/apiService.ts"
-)
-
-# Fichiers serveur à copier
-declare -ra SERVER_FILES_SIMPLE=(
-    ".env.example"
-    ".gitignore"
-    "package.json"
-    "tsconfig.json"
-    "prisma/schema.prisma"
-    "src/controllers/pingController.ts"
-    "src/routes/index.ts"
-    "src/services/database.ts"
-)
-
-# Fichiers serveur à traiter avec variables
-declare -ra SERVER_FILES_PROCESSED=(
-    ".env"
-    "src/app.ts"
-    "src/server.ts"
-)
-
-# ==============================================================================
 # FONCTIONS DE CRÉATION
 # ==============================================================================
 
 create_root_files() {
     #print_section_header "📂 Création des fichiers racine du projet"
-    create_simple_files "root" "fichiers racine" "${ROOT_FILES_SIMPLE[@]}"
-    create_processed_files "root" "fichiers racine" "PROJECT_NAME=$PROJECT_NAME FRONTEND_PORT=$FRONTEND_PORT BACKEND_PORT=$BACKEND_PORT" "${ROOT_FILES_PROCESSED[@]}"
+    create_simple_files "root" "fichiers racine" "${ROOT_SIMPLE}"
+    create_processed_files "root" "fichiers racine" "PROJECT_NAME=$PROJECT_NAME FRONTEND_PORT=$FRONTEND_PORT BACKEND_PORT=$BACKEND_PORT" "${ROOT_PROCESSED}"
     #print_success "Fichiers racine créés !"
 }
 
 create_client_files() {
     #print_section_header "💻 Création des fichiers du client (Frontend)"
-    create_simple_files "client" "client React/Vite" "${CLIENT_FILES_SIMPLE[@]}"
-    create_processed_files "client" "client React/Vite" "PROJECT_NAME=$PROJECT_NAME FRONTEND_PORT=$FRONTEND_PORT BACKEND_PORT=$BACKEND_PORT" "${CLIENT_FILES_PROCESSED[@]}"
+    create_simple_files "client" "client React/Vite" "${CLIENT_SIMPLE}"
+    create_processed_files "client" "client React/Vite" "PROJECT_NAME=$PROJECT_NAME FRONTEND_PORT=$FRONTEND_PORT BACKEND_PORT=$BACKEND_PORT" "${CLIENT_PROCESSED}"
     #print_success "Fichiers client créés !"
 }
 
 create_server_files() {
     #print_section_header "🖥️  Création des fichiers du serveur (Backend)"
-    create_simple_files "server" "serveur Node.js/Express" "${SERVER_FILES_SIMPLE[@]}"
-    create_processed_files "server" "serveur Node.js/Express" "PROJECT_NAME=$PROJECT_NAME BACKEND_PORT=$BACKEND_PORT FRONTEND_PORT=$FRONTEND_PORT" "${SERVER_FILES_PROCESSED[@]}"
+    create_simple_files "server" "serveur Node.js/Express" "${SERVER_SIMPLE}"
+    create_processed_files "server" "serveur Node.js/Express" "PROJECT_NAME=$PROJECT_NAME BACKEND_PORT=$BACKEND_PORT FRONTEND_PORT=$FRONTEND_PORT" "${SERVER_PROCESSED}"
     #print_success "Fichiers serveur créés !"
+}
+
+create_scripts_files(){
+    create_simple_files "scripts" "scripts" "${SCRIPTS_SIMPLE}"
 }
 
 # ==============================================================================
@@ -189,6 +138,7 @@ main() {
     create_root_files
     create_client_files
     create_server_files
+    create_scripts_files
 
     # Message de fin
     print_success "Fichiers créés"
